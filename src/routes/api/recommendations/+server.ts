@@ -35,6 +35,7 @@ export const GET: RequestHandler = async (req) => {
 			genres: searchParams.genres,
 			instruments: searchParams.instruments,
 
+			amount: 10,
 			hasToBeByArtist: "different"
 		});
 
