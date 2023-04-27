@@ -1,45 +1,46 @@
-import { error, type RequestHandler } from "@sveltejs/kit"
-import SpotifyService from "../../../services/spotify/SpotifyService"
+import OpenAiService from "$lib/services/openai/OpenAiService";
+import SpotifyService from "$lib/services/spotify/SpotifyService";
+import { extractSearchParamsFromRequest } from "$lib/utils/server/extract-search-params-from-request";
+import handleServerError from "$lib/utils/server/handle-server-error";
+import sendResponse from "$lib/utils/server/send-server-response";
+import type { RequestHandler } from "@sveltejs/kit";
+import { z } from "zod";
 
-import { SpotifyTrackNotFoundError } from "../../../services/spotify/SpotifyServiceError"
-import OpenAiService from "../../../services/openai/OpenAiService"
-import { OpenAiValidationError } from "../../../services/openai/OpenAiError"
+const stringToArraySchema = z.string().transform((value) => value.split(","));
+
+const searchParamsSchema = z.object({
+	songId: z.string(),
+	themes: stringToArraySchema,
+	moods: stringToArraySchema,
+	genres: stringToArraySchema,
+	instruments: stringToArraySchema
+});
 
 export const GET: RequestHandler = async (req) => {
-	const search = req.url.searchParams.get("search")
-
-	if (!search) {
-		throw error(400, "Missing search parameter")
-	}
-
-	const spotifyService = new SpotifyService("")
-	const openAiService = new OpenAiService()
-
 	try {
-		const track = await spotifyService.findTrackByName(search)
+		const searchParams = searchParamsSchema.parse(extractSearchParamsFromRequest(req));
 
-		const qualities = await openAiService.getTrackQualities(
-			track.name,
-			track.artists.map((artist) => artist.name)
-		)
+		const { songId } = searchParams;
 
-		const trackDetails = {
-			...track,
-			...qualities
-		}
+		const spotifyService = new SpotifyService("");
+		const openAiService = new OpenAiService();
 
-		return new Response(JSON.stringify(trackDetails))
+		const track = await spotifyService.findTrackById(songId);
+
+		const recommendations = await openAiService.getTrackRecommendations({
+			name: track.name,
+			artists: track.artists.map((artist) => artist.name),
+			themes: searchParams.themes,
+			moods: searchParams.moods,
+			genres: searchParams.genres,
+			instruments: searchParams.instruments,
+
+			hasToBeByArtist: "different"
+		});
+
+		return sendResponse(recommendations);
 	} catch (err) {
-		return handleError(err)
+		console.log(err);
+		return handleServerError(err);
 	}
-}
-
-const handleError = (err: unknown) => {
-	if (err instanceof SpotifyTrackNotFoundError) {
-		throw error(404, "Track not found")
-	} else if (err instanceof OpenAiValidationError) {
-		throw error(400, "OpenAI validation error")
-	} else {
-		throw error(500, "Internal server error")
-	}
-}
+};
