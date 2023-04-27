@@ -5,4 +5,11 @@ const cleanResponse = (response: string) => {
 	return JSON.parse(json);
 };
 
-export { cleanResponse };
+const trimPrompt = (prompt: string) => {
+	return prompt
+		.split("\n")
+		.map((s) => s.trim())
+		.join("\n");
+};
+
+export { cleanResponse, trimPrompt };

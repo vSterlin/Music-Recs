@@ -4,7 +4,7 @@ import QualitiesSchema, { type Qualities } from "./schema/qualities";
 import { ZodError } from "zod";
 import RecommendationsSchema, { type Recommendations } from "./schema/recommendations";
 import { ValidationError } from "$lib/utils/server/validation-error";
-import { cleanResponse } from "./utils/clean-response";
+import { cleanResponse } from "./utils/clean";
 const configuration = new Configuration({
 	apiKey: import.meta.env.VITE_OPENAI_API_KEY
 });
@@ -47,7 +47,7 @@ class OpenAiService {
 			model: "text-davinci-003",
 			prompt,
 			max_tokens: 500,
-			temperature: 0.1
+			temperature: 0.5
 		});
 
 		const recommendationsJson = cleanResponse(response.data.choices[0].text || "[]");
