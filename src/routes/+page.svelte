@@ -4,49 +4,56 @@
 
 	import SongDetails from "../components/SongDetails.svelte";
 	import type { Song } from "../lib/services/spotify/schema/song";
-	import RadialProgress from "../components/RadialProgress.svelte";
+	import { get } from "$lib/api/api";
+	import ErrorToast from "../components/ErrorToast.svelte";
+	import { placeholderSong } from "$lib/utils/placeholder-song";
 
 	let searchValue = "";
 
-	let song: Song;
+	let song: Song = placeholderSong;
 
 	let error: string | undefined;
 	let loading = false;
 
 	const fetchTrackDetails = async (searchValue: string) => {
-		const response = await fetch(`/api/details?search=${searchValue}`);
-		const data = await response.json();
+		const response = await get(`/api/details?search=${searchValue}`);
 
-		return data as Song;
+		return response as Song;
 	};
 	const debouncedSearch = debounce(async (value) => {
 		if (searchValue.length < 3) return;
 		loading = true;
 		try {
-			const trackDetails = fetchTrackDetails(value);
-			song = await trackDetails;
+			const trackDetails = await fetchTrackDetails(value);
+			song = trackDetails;
 		} catch (e) {
-			error = (e as Error).message;
+			error = "error";
 		}
 		loading = false;
 	}, 500);
 
 	$: debouncedSearch(searchValue);
+	$: error &&
+		debounce(() => {
+			error = undefined;
+		}, 3000)();
 </script>
 
-<div class="flex w-full justify-center items-center">
-	<div class="flex flex-col gap-8">
+<nav class="navbar px-24 py-4">
+	<div>
 		<SearchBar bind:value={searchValue} />
-
-		<RadialProgress />
+	</div>
+</nav>
+<div class="flex w-full px-24 py-8">
+	<div class="flex flex-col gap-8 w-full">
 		<div>
-			{#if searchValue.length >= 3}
+			{#if searchValue.length >= 3 || song}
 				{#if song}
 					<SongDetails {song} />
-				{:else if loading}
-					<RadialProgress />
+					<!-- {:else if loading}
+					<RadialProgress /> -->
 				{:else if error}
-					<div>{error}</div>
+					<ErrorToast>{error}</ErrorToast>
 				{/if}
 			{/if}
 		</div>

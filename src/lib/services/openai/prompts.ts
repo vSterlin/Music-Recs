@@ -15,7 +15,7 @@ const trackParametersPrompt = (trackParams: RecommendTracksParams) => {
 		.map((param) => `- ${param}`);
 
 	return `
-		Paramaters:
+		Parameters:
 			${paramList.join("\n")}
 
 	`.trim();
@@ -44,7 +44,7 @@ const recommendTrackPrompt = (trackParams: RecommendTracksParams) => {
     Output: 
 			- An array of recommended songs, each represented as an object with properties "name" (string) and "artist" (string)
 
-		Constrains:
+		Constraints:
 			${mustBeBy}
 			- There must be ${amount} songs in the output array
   `;
