@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { debounce } from "lodash";
 
-	import SongDetails from "../components/SongDetails.svelte";
+	import SongDetails from "../components/SongDetailsSection.svelte";
 	import type { Song } from "../lib/services/spotify/schema/song";
 	import { get } from "$lib/api/api";
 	import ErrorToast from "../components/ErrorToast.svelte";
 	import { placeholderSong } from "$lib/utils/placeholder-song";
 	import Navbar from "../components/Navbar.svelte";
 	import songSelectionStore from "$lib/stores/song-selection-store";
+	import SongRecommendationSection from "../components/SongRecommendationSection.svelte";
 
 	let searchValue = "";
 	let accessToken = "";
@@ -64,14 +65,15 @@
 	<div class="flex">
 		<div class="flex flex-col gap-8 w-full">
 			<div>
-				{#if searchValue.length >= 3 || song}
-					{#if song}
-						<SongDetails {song} />
-					{:else if error}
-						<ErrorToast>{error}</ErrorToast>
-					{/if}
+				{#if song}
+					<SongDetails {song} />
+				{:else if error}
+					<ErrorToast>{error}</ErrorToast>
 				{/if}
 			</div>
+			{#if $songSelectionStore}
+				<SongRecommendationSection />
+			{/if}
 		</div>
 	</div>
 </div>

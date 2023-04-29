@@ -1,37 +1,32 @@
 const placeholderSong = {
-	id: "6QewNVIDKdSl8Y3ycuHIei",
-	name: "Even Flow",
-	artists: [
-		{
-			id: "1w5Kfo2jwwIPruYS2UWh56",
-			name: "Pearl Jam"
-		}
-	],
+	id: "2VDg6h3Qr3F8UuFVInQxE6",
+	name: "Planet Caravan",
+	artists: [{ id: "5M52tdBnJaKSvOpJGz8mfZ", name: "Black Sabbath" }],
 	album: {
-		id: "5B4PYA7wNN4WdEXdIJu58a",
-		name: "Ten",
+		id: "6r7LZXAVueS5DqdrvXJJK7",
+		name: "Paranoid (Remaster)",
 		images: [
 			{
 				height: 640,
-				url: "https://i.scdn.co/image/ab67616d0000b273d400d27cba05bb0545533864",
+				url: "https://i.scdn.co/image/ab67616d0000b273d5fccf9ce08b6a1e7d12a222",
 				width: 640
 			},
 			{
 				height: 300,
-				url: "https://i.scdn.co/image/ab67616d00001e02d400d27cba05bb0545533864",
+				url: "https://i.scdn.co/image/ab67616d00001e02d5fccf9ce08b6a1e7d12a222",
 				width: 300
 			},
 			{
 				height: 64,
-				url: "https://i.scdn.co/image/ab67616d00004851d400d27cba05bb0545533864",
+				url: "https://i.scdn.co/image/ab67616d00004851d5fccf9ce08b6a1e7d12a222",
 				width: 64
 			}
 		]
 	},
 	instruments: ["guitar", "bass", "drums"],
-	genres: ["alternative rock", "grunge"],
-	moods: ["angry", "intense"],
-	themes: ["loneliness", "isolation"]
+	genres: ["hard rock", "heavy metal"],
+	moods: ["dreamy", "relaxed"],
+	themes: ["space", "journey"]
 };
 
 export { placeholderSong };
