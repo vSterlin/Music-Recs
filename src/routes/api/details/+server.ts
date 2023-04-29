@@ -4,14 +4,21 @@ import SpotifyService from "$lib/services/spotify/SpotifyService";
 import OpenAiService from "$lib/services/openai/OpenAiService";
 import handleServerError from "$lib/utils/server/handle-server-error";
 import sendResponse from "$lib/utils/server/send-server-response";
+import { extractAuthHeader } from "$lib/utils/server/extract-auth-header";
 
-export const GET: RequestHandler = async (req) => {
-	const search = req.url.searchParams.get("search");
+export const GET: RequestHandler = async ({ request, url }) => {
+	const search = url.searchParams.get("search");
 	if (!search) {
 		throw error(400, "Missing search parameter");
 	}
 
-	const spotifyService = new SpotifyService("");
+	const spotifyAccessToken = extractAuthHeader(request);
+
+	if (!spotifyAccessToken) {
+		throw error(401, "Missing Spotify access token");
+	}
+
+	const spotifyService = new SpotifyService(spotifyAccessToken);
 	const openAiService = new OpenAiService();
 
 	try {

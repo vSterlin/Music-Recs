@@ -15,7 +15,7 @@ const handleServerError = (err: unknown) => {
 	) {
 		throw error(400, "Validation error");
 	} else {
-		throw error(500, "Internal server error");
+		throw err;
 	}
 };
 

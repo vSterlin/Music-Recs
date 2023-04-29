@@ -1,9 +1,12 @@
 <script lang="ts">
+	import songSelectionStore from "$lib/stores/song-selection-store";
 	import type { Song } from "../lib/services/spotify/schema/song";
 
 	import SongQualityBadge from "./SongQualityBadge.svelte";
 
 	export let song: Song;
+
+	const { toggleQuality } = songSelectionStore;
 </script>
 
 <div>
@@ -23,7 +26,10 @@
 			<div class="text-3xl mb-2">Instruments</div>
 			<div class="flex gap-2">
 				{#each song.instruments as instrument}
-					<SongQualityBadge>
+					<SongQualityBadge
+						onSelect={() => toggleQuality("instruments", instrument)}
+						isSelected={$songSelectionStore?.instruments.includes(instrument)}
+					>
 						{instrument}
 					</SongQualityBadge>
 				{/each}
@@ -35,7 +41,10 @@
 			<div class="text-3xl mb-2">Moods</div>
 			<div class="flex gap-2">
 				{#each song.moods as mood}
-					<SongQualityBadge selected>{mood}</SongQualityBadge>
+					<SongQualityBadge
+						onSelect={() => toggleQuality("moods", mood)}
+						isSelected={$songSelectionStore?.moods.includes(mood)}>{mood}</SongQualityBadge
+					>
 				{/each}
 			</div>
 		</section>
@@ -44,7 +53,10 @@
 			<div class="text-3xl mb-2">Themes</div>
 			<div class="flex gap-2">
 				{#each song.themes as theme}
-					<SongQualityBadge>{theme}</SongQualityBadge>
+					<SongQualityBadge
+						onSelect={() => toggleQuality("themes", theme)}
+						isSelected={$songSelectionStore?.themes.includes(theme)}>{theme}</SongQualityBadge
+					>
 				{/each}
 			</div>
 		</section>
@@ -53,7 +65,10 @@
 			<div class="text-3xl mb-2">Genres</div>
 			<div class="flex gap-2">
 				{#each song.genres as genre}
-					<SongQualityBadge>{genre}</SongQualityBadge>
+					<SongQualityBadge
+						onSelect={() => toggleQuality("genres", genre)}
+						isSelected={$songSelectionStore?.genres.includes(genre)}>{genre}</SongQualityBadge
+					>
 				{/each}
 			</div>
 		</section>

@@ -22,7 +22,7 @@ class SpotifyService {
 			clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
 			clientSecret: import.meta.env.VITE_SPOTIFY_CLIENT_SECRET,
 			redirectUri: "http://127.0.0.1:5173/",
-			accessToken: import.meta.env.VITE_SPOTIFY_ACCESS_TOKEN
+			accessToken
 		});
 	}
 
